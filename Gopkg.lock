@@ -2,6 +2,18 @@
 
 
 [[projects]]
+  branch = "master"
+  digest = "1:8205e9eceefe672f450181a945eba9f3a09edfe53e96edfe19feb6ec8c9d87d1"
+  name = "github.com/cdchris12/lagoon-cli"
+  packages = [
+    "app",
+    "cmd",
+    "graphql",
+  ]
+  pruneopts = "UT"
+  revision = "b8d3cd14b884ee24b8f5499ef9b4fd3a348ffad8"
+
+[[projects]]
   digest = "1:abeb38ade3f32a92943e5be54f55ed6d6e3b6602761d74b4aab4c9dd45c18abd"
   name = "github.com/fsnotify/fsnotify"
   packages = ["."]
@@ -221,6 +233,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/cdchris12/lagoon-cli/app",
+    "github.com/cdchris12/lagoon-cli/cmd",
+    "github.com/cdchris12/lagoon-cli/graphql",
     "github.com/logrusorgru/aurora",
     "github.com/machinebox/graphql",
     "github.com/mitchellh/go-homedir",
