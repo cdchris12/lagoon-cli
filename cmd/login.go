@@ -57,16 +57,15 @@ func publicKey(path string) ssh.AuthMethod {
 	signer, err := ssh.ParsePrivateKey(key)
 	if err.Error() != "ssh: cannot decode encrypted private keys" {
 		panic(err)
-	} else {
-		fmt.Println("Found an encrypted private key!")
-		fmt.Printf("Enter passphrase for '%s': ", path)
-		bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
-		fmt.Println()
+	}
+	fmt.Println("Found an encrypted private key!")
+	fmt.Printf("Enter passphrase for '%s': ", path)
+	bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	fmt.Println()
 
-		signer, err := ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
-		if err != nil {
-			panic(err)
-		}
+	signer, err := ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
+	if err != nil {
+		panic(err)
 	}
 	return ssh.PublicKeys(signer)
 }
