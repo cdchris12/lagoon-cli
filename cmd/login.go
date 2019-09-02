@@ -21,7 +21,7 @@ var loginCmd = &cobra.Command{
 		config := &ssh.ClientConfig{
 			User: "lagoon",
 			Auth: []ssh.AuthMethod{
-				publicKey(fmt.Sprintf("%s/.ssh/id_rsa.pub", homeDir)),
+				publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir)),
 			},
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
