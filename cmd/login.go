@@ -18,10 +18,11 @@ var loginCmd = &cobra.Command{
 	Short: "Log into a Lagoon instance",
 	Run: func(cmd *cobra.Command, args []string) {
 		homeDir, _ := os.UserHomeDir()
+		authMethod, closeSSHAgent := publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir))
 		config := &ssh.ClientConfig{
 			User: "lagoon",
 			Auth: []ssh.AuthMethod{
-				publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir)),
+				authMethod,
 			},
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
@@ -48,25 +49,17 @@ var loginCmd = &cobra.Command{
 			panic(err)
 		}
 		fmt.Println("Token fetched and saved.")
+
+		closeSSHAgent()
 	},
 }
 
-func publicKey(path string) ssh.AuthMethod {
+func publicKey(path string) (ssh.AuthMethod, func() error) {
 	key, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
 
-	// First, try to look for an unencrypted private key
-	signer, err := ssh.ParsePrivateKey(key)
-	if err.Error() != "ssh: cannot decode encrypted private keys" {
-		panic(err)
-	} else if err == nil {
-		// return unencrypted private key
-		return ssh.PublicKeys(signer)
-	}
-
-	//#TODO
 	// Connect to SSH agent to ask for unencrypted private keys
 	if sshAgentConn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK")); err == nil {
 		sshAgent := agent.NewClient(sshAgentConn)
@@ -75,8 +68,17 @@ func publicKey(path string) ssh.AuthMethod {
 		if len(keys) > 0 {
 			// There are key(s) in the agent
 			//defer sshAgentConn.Close()
-			return ssh.PublicKeysCallback(sshAgent.Signers)
+			return ssh.PublicKeysCallback(sshAgent.Signers), sshAgentConn.Close
 		}
+	}
+
+	// Try to look for an unencrypted private key
+	signer, err := ssh.ParsePrivateKey(key)
+	if err.Error() != "ssh: cannot decode encrypted private keys" {
+		panic(err)
+	} else if err == nil {
+		// return unencrypted private key
+		return ssh.PublicKeys(signer), noopCloseFunc
 	}
 
 	// Handle encrypted private keys
@@ -89,5 +91,5 @@ func publicKey(path string) ssh.AuthMethod {
 	if err != nil {
 		panic(err)
 	}
-	return ssh.PublicKeys(signer)
+	return ssh.PublicKeys(signer), noopCloseFunc
 }
