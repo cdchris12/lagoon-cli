@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:25e1b7a3bf25d3db2efe07061068825455fbab3bd9be240732fef796e8fc869b"
+  digest = "1:9adbf4fd051a6c9c77812e6e1f8ba7779d5e9453c90049052d16fb4c7ac4eb73"
   name = "github.com/cdchris12/lagoon-cli"
   packages = [
     "app",
@@ -11,7 +11,7 @@
     "graphql",
   ]
   pruneopts = "UT"
-  revision = "175ae57da53be0a795447803989fa0bf4dbe88c7"
+  revision = "7d4ac22244a5371e612aeabf3628adbcf72f4080"
 
 [[projects]]
   digest = "1:abeb38ade3f32a92943e5be54f55ed6d6e3b6602761d74b4aab4c9dd45c18abd"
@@ -181,7 +181,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:13f3d1b082bd8b53094e9276981c1e6d80371ba8985ace755f00d48ba25ce075"
+  digest = "1:eacd8dc6eafbff1b51ba206a543b893456639edf07c8db524393cdd4a0d7eac4"
   name = "golang.org/x/crypto"
   packages = [
     "curve25519",
@@ -191,6 +191,7 @@
     "internal/subtle",
     "poly1305",
     "ssh",
+    "ssh/agent",
     "ssh/terminal",
   ]
   pruneopts = "UT"
@@ -246,6 +247,7 @@
     "github.com/spf13/cobra",
     "github.com/spf13/viper",
     "golang.org/x/crypto/ssh",
+    "golang.org/x/crypto/ssh/agent",
     "golang.org/x/crypto/ssh/terminal",
     "gopkg.in/yaml.v2",
   ]
