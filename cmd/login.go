@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -55,16 +54,15 @@ func publicKey(path string) ssh.AuthMethod {
 		panic(err)
 	}
 	signer, err := ssh.ParsePrivateKey(key)
-	fmt.Println(err)
-	if strings.Compare("ssh: cannot decode encrypted private keys", err) == 0 {
-		reader := bufio.NewReader(os.Stdin)
+	if err.Error() != "ssh: cannot decode encrypted private keys" {
+		panic(err)
+	} else {
 		fmt.Println("Found an encrypted private key!")
-		fmt.Println("Please enter the passphrase for your private key: ")
-		pass, _ := reader.ReadString('\n')
-	    // convert CRLF to LF
-	    pass = strings.Replace(pass, "\n", "", -1)
+		fmt.Printf("Enter passphrase for '%s': ", path)
+		bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+		fmt.Println()
 
-		signer, err := ssh.ParsePrivateKeyWithPassphrase(key, []byte(pass))
+		signer, err := ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
 		if err != nil {
 			panic(err)
 		}
