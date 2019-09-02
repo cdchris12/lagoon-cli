@@ -74,7 +74,7 @@ func publicKey(path string) ssh.AuthMethod {
 		keys, _ := sshAgent.List()
 		if len(keys) > 0 {
 			// There are key(s) in the agent
-			defer sshAgentConn.Close
+			defer sshAgentConn.Close()
 			return ssh.PublicKeysCallback(sshAgent.Signers)
 		}
 	}
