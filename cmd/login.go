@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/crypto/ssh/agent"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -19,7 +20,7 @@ var loginCmd = &cobra.Command{
 		config := &ssh.ClientConfig{
 			User: "lagoon",
 			Auth: []ssh.AuthMethod{
-				publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir)),
+				publicKey(fmt.Sprintf("%s/.ssh/id_rsa.pub", homeDir)),
 			},
 			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 		}
@@ -54,10 +55,30 @@ func publicKey(path string) ssh.AuthMethod {
 	if err != nil {
 		panic(err)
 	}
+
+	// First, try to look for an unencrypted private key
 	signer, err := ssh.ParsePrivateKey(key)
 	if err.Error() != "ssh: cannot decode encrypted private keys" {
 		panic(err)
+	} else if err == nil {
+		// return unencrypted private key
+		return ssh.PublicKeys(signer)
 	}
+
+	//#TODO
+	// Connect to SSH agent to ask for unencrypted private keys
+	if sshAgentConn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK")); err == nil {
+		sshAgent := agent.NewClient(sshAgentConn)
+
+		keys, _ := sshAgent.List()
+		if len(keys) > 0 {
+			// There are key(s) in the agent
+			defer sshAgentConn.Close
+			return ssh.PublicKeysCallback(sshAgent.Signers)
+		}
+	}
+
+	// Handle encrypted private keys
 	fmt.Println("Found an encrypted private key!")
 	fmt.Printf("Enter passphrase for '%s': ", path)
 	bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
