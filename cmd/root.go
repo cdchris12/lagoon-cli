@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mglaman/lagoon/app"
+	"github.com/cdchris12/lagoon-cli/app"
 
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mglaman/lagoon/graphql"
+	"github.com/cdchris12/lagoon-cli/graphql"
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"

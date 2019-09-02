@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mglaman/lagoon/cmd"
+	"github.com/cdchris12/lagoon-cli/cmd"
 )
 
 func main() {

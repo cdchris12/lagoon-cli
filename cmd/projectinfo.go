@@ -5,7 +5,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mglaman/lagoon/graphql"
+	"github.com/cdchris12/lagoon-cli/graphql"
 
 	"github.com/logrusorgru/aurora"
 	"github.com/olekukonko/tablewriter"

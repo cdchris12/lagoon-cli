@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mglaman/lagoon/app"
-	"github.com/mglaman/lagoon/graphql"
+	"github.com/cdchris12/lagoon-cli/app"
+	"github.com/cdchris12/lagoon-cli/graphql"
 
 	"github.com/spf13/cobra"
 )
