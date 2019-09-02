@@ -17,7 +17,6 @@ var loginCmd = &cobra.Command{
 	Use:   "login",
 	Short: "Log into a Lagoon instance",
 	Run: func(cmd *cobra.Command, args []string) {
-		noopCloseFunc := func() error { return nil }
 		homeDir, _ := os.UserHomeDir()
 		authMethod, closeSSHAgent := publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir))
 		config := &ssh.ClientConfig{
@@ -56,6 +55,8 @@ var loginCmd = &cobra.Command{
 }
 
 func publicKey(path string) (ssh.AuthMethod, func() error) {
+	noopCloseFunc := func() error { return nil }
+	
 	key, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
