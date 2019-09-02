@@ -63,7 +63,7 @@ func publicKey(path string) ssh.AuthMethod {
 	bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Println()
 
-	signer, err := ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
+	signer, err = ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
 	if err != nil {
 		panic(err)
 	}
