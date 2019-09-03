@@ -61,7 +61,7 @@ func init() {
 	projectCmd.AddCommand(projectListCmd)
 }
 
-func getProductionEnvironment(environments []Environments, projectName string) (*Environments, error) {
+func getProductionEnvironment(environments []Environments, projectName string) (route, error) {
 	for _, environment := range environments {
 		if environment.EnvironmentType == "production" {
 			return &environment.Route, nil
