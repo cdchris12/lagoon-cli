@@ -42,6 +42,7 @@ query whatIsThere {
 		for _, project := range responseData.AllProjects {
 			productionEnvironment, err := getProductionEnvironment(project.Environments)
 			if err != nil {
+				fmt.Println(responseData)
 				panic(err)
 			}
 			table.Append([]string{
