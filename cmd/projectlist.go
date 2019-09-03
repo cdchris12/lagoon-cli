@@ -61,10 +61,10 @@ func init() {
 	projectCmd.AddCommand(projectListCmd)
 }
 
-func getProductionEnvironment(environments []Environments, projectName string) (*string, error) {
+func getProductionEnvironment(environments []Environments, projectName string) (string, error) {
 	for _, environment := range environments {
 		if environment.EnvironmentType == "production" {
-			return &environment.Route, nil
+			return environment.Route, nil
 		}
 	}
 	//#TODO
@@ -76,6 +76,6 @@ func getProductionEnvironment(environments []Environments, projectName string) (
 	} else {
 		// Project has environments, but none are set as production
 		fmt.Printf("No production environment could be found for the %s project! Defaulting to the first environment...", projectName)
-		return &environments[0].Route, nil
+		return environments[0].Route, nil
 	}
 }
