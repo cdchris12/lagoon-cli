@@ -40,9 +40,8 @@ query whatIsThere {
 		table.SetAutoWrapText(true)
 		table.SetHeader([]string{"ID", "Name", "Customer", "Git URL", "URL"})
 		for _, project := range responseData.AllProjects {
-			productionEnvironment, err := getProductionEnvironment(project.Environments)
+			productionEnvironment, err := getProductionEnvironment(project.Environments, project.Name)
 			if err != nil {
-				fmt.Println(responseData)
 				panic(err)
 			}
 			table.Append([]string{
@@ -63,11 +62,14 @@ func init() {
 	projectCmd.AddCommand(projectListCmd)
 }
 
-func getProductionEnvironment(environments []Environments) (*Environments, error) {
+func getProductionEnvironment(environments []Environments, projectName string) (*Environments, error) {
 	for _, environment := range environments {
 		if environment.EnvironmentType == "production" {
 			return &environment, nil
 		}
 	}
-	return nil, errors.New("unable to determine production environment")
+	//#TODO
+	// Make this print in red, if possible
+	fmt.Println("No production environment could be found for the %s project! Defaulting to the first environment...", projectName)
+	return &environments[0], nil
 }
