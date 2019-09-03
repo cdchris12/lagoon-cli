@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:f3ac667e9b2ecc224223a0ded9bf90c3ec56c14616813262ff3ddbdd91ef60a5"
+  digest = "1:cf355bb9ee4463b3e623b57a40e891184dc77811aec86e0d041f5181a1d464e0"
   name = "github.com/cdchris12/lagoon-cli"
   packages = [
     "app",
@@ -11,7 +11,7 @@
     "graphql",
   ]
   pruneopts = "UT"
-  revision = "f005bd1e01c7b9ab2cf0879b12ec3f14a013cd27"
+  revision = "f1731afb993e8919af2b141ac19d0c0b9fc9a910"
 
 [[projects]]
   digest = "1:abeb38ade3f32a92943e5be54f55ed6d6e3b6602761d74b4aab4c9dd45c18abd"

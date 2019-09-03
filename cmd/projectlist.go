@@ -39,7 +39,7 @@ query whatIsThere {
 		table.SetAutoWrapText(true)
 		table.SetHeader([]string{"ID", "Name", "Customer", "Git URL", "URL"})
 		for _, project := range responseData.AllProjects {
-			productionEnvironment, err := getProductionEnvironment(project.Environments, project.Name)
+			productionEnvironmentRoute, err := getProductionEnvironment(project.Environments, project.Name)
 			if err != nil {
 				panic(err)
 			}
@@ -48,7 +48,7 @@ query whatIsThere {
 				project.Name,
 				project.Customer.Name,
 				project.GitURL,
-				productionEnvironment.Route,
+				productionEnvironmentRoute,
 			})
 		}
 		table.Render()
@@ -64,11 +64,18 @@ func init() {
 func getProductionEnvironment(environments []Environments, projectName string) (*Environments, error) {
 	for _, environment := range environments {
 		if environment.EnvironmentType == "production" {
-			return &environment, nil
+			return &environment.Route, nil
 		}
 	}
 	//#TODO
 	// Make this print in red, if possible
-	fmt.Println("No production environment could be found for the %s project! Defaulting to the first environment...", projectName)
-	return &environments[0], nil
+	if len(environments) == 0 {
+		// No environments in this project
+		fmt.Printf("The project %s has no environments! Skipping...", projectName)
+		return "", nil
+	} else {
+		// Project has environments, but none are set as production
+		fmt.Printf("No production environment could be found for the %s project! Defaulting to the first environment...", projectName)
+		return &environments[0].Route, nil
+	}
 }
