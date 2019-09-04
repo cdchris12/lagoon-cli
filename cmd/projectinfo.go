@@ -29,6 +29,16 @@ var projectInfoCmd = &cobra.Command{
 			}
 			cmdProject.Name = args[0]
 		}
+
+		// get a new token if the current one is invalid
+		valid := graphql.VerifyTokenExpiry()
+		if valid == false {
+			loginErr := loginToken()
+			if loginErr != nil {
+				panic(loginErr)
+			}
+		}
+
 		var responseData ProjectByName
 		err := graphql.GraphQLRequest(fmt.Sprintf(`query {
   projectByName(name: "%s") {
