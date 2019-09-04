@@ -1,12 +1,13 @@
 GOCMD=go
-GO11MODULE=on
 
 ARTIFACT_NAME=lagoon
 ARTIFACT_DESTINATION=$(GOPATH)/bin
 
-all: test build
+all: deps test build
+deps:
+	GO111MODULE="on" ${GOCMD} get -v
 build:
-	$(GOCMD) build -o $(ARTIFACT_DESTINATION)/$(ARTIFACT_NAME) -v
+	GO111MODULE="on" $(GOCMD) build -o $(ARTIFACT_DESTINATION)/$(ARTIFACT_NAME) -v
 test:
 	$(GOCMD) fmt ./...
 	$(GOCMD) vet ./...

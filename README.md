@@ -18,3 +18,10 @@ Fetches your JWT token for integrating with Lagoon's APIs
 ### projects
 
 List your projects
+
+
+## Build
+```
+make deps
+make build
+```
