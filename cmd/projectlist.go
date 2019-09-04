@@ -21,10 +21,6 @@ query whatIsThere {
 		id
 		gitUrl
 		name,
-		customer {
-		  id,
-		  name
-		}
 		environments {
 		  environmentType,
 		  route
@@ -37,18 +33,12 @@ query whatIsThere {
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoWrapText(true)
-		table.SetHeader([]string{"ID", "Name", "Customer", "Git URL", "URL"})
+		table.SetHeader([]string{"ID", "Project Name", "Git URL"})
 		for _, project := range responseData.AllProjects {
-			productionEnvironmentRoute, err := getProductionEnvironment(project.Environments, project.Name)
-			if err != nil {
-				panic(err)
-			}
 			table.Append([]string{
 				fmt.Sprintf("%d", project.ID),
 				project.Name,
-				project.Customer.Name,
 				project.GitURL,
-				productionEnvironmentRoute,
 			})
 		}
 		table.Render()
@@ -59,23 +49,4 @@ query whatIsThere {
 
 func init() {
 	projectCmd.AddCommand(projectListCmd)
-}
-
-func getProductionEnvironment(environments []Environments, projectName string) (string, error) {
-	for _, environment := range environments {
-		if environment.EnvironmentType == "production" {
-			return environment.Route, nil
-		}
-	}
-	//#TODO
-	// Make this print in red, if possible
-	if len(environments) == 0 {
-		// No environments in this project
-		fmt.Printf("The project %s has no environments! Skipping...", projectName)
-		return "", nil
-	} else {
-		// Project has environments, but none are set as production
-		fmt.Printf("No production environment could be found for the %s project! Defaulting to the first environment...", projectName)
-		return environments[0].Route, nil
-	}
 }
