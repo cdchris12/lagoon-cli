@@ -14,6 +14,15 @@ var projectListCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Show your projects",
 	Run: func(cmd *cobra.Command, args []string) {
+		// get a new token if the current one is invalid
+		valid := graphql.VerifyTokenExpiry()
+		if valid == false {
+			loginErr := loginToken()
+			if loginErr != nil {
+				panic(loginErr)
+			}
+		}
+
 		var responseData WhatIsThere
 		err := graphql.GraphQLRequest(`
 query whatIsThere {
@@ -49,4 +58,5 @@ query whatIsThere {
 
 func init() {
 	projectCmd.AddCommand(projectListCmd)
+
 }
