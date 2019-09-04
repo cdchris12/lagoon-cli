@@ -39,6 +39,7 @@ var projectDeleteEnvCmd = &cobra.Command{
       input: {
         project:"%s"
         name:"%s"
+        execute:true
       }
     )
   }`, projectName, projectEnvironment), &responseData)
