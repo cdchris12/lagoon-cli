@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/logrusorgru/aurora v0.0.0-20190803045625-94edacc10f9b
 	github.com/machinebox/graphql v0.2.2
+	github.com/manifoldco/promptui v0.3.2
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/olekukonko/tablewriter v0.0.1
