@@ -30,11 +30,16 @@ type Project struct {
 	Environments                 []Environments `json:"environments"`
 	AutoIdle                     int            `json:"autoIdle"`
 	DevelopmentEnvironmentsLimit int            `json:"developmentEnvironmentsLimit"`
-	Customer                     Customer       `json:"customer"`
 }
 
-// Customer struct.
-type Customer struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+type Environment struct {
+	EnvironmentByOpenshiftProjectName Environments `json:"environmentByOpenshiftProjectName"`
+}
+
+type DeployResult struct {
+	DeployEnvironmentBranch string `json:"deployEnvironmentBranch"`
+}
+
+type DeleteResult struct {
+	DeleteEnvironment string `json:"deleteEnvironment"`
 }
