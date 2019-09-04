@@ -10,6 +10,8 @@ import (
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+
+	"github.com/manifoldco/promptui"
 )
 
 var cmdProject app.LagoonProject
@@ -102,4 +104,16 @@ func initConfig() {
 		}
 
 	}
+}
+
+func yesNo() bool {
+	prompt := promptui.Select{
+		Label: "Select[Yes/No]",
+		Items: []string{"No", "Yes"},
+	}
+	_, result, err := prompt.Run()
+	if err != nil {
+		panic(err)
+	}
+	return result == "Yes"
 }
