@@ -30,6 +30,7 @@ query whatIsThere {
 		id
 		gitUrl
 		name,
+		developmentEnvironmentsLimit,
 		environments {
 		  environmentType,
 		  route
@@ -42,12 +43,13 @@ query whatIsThere {
 		}
 		table := tablewriter.NewWriter(os.Stdout)
 		table.SetAutoWrapText(true)
-		table.SetHeader([]string{"ID", "Project Name", "Git URL"})
+		table.SetHeader([]string{"ID", "Project Name", "Git URL", "Dev Environments"})
 		for _, project := range responseData.AllProjects {
 			table.Append([]string{
 				fmt.Sprintf("%d", project.ID),
 				project.Name,
 				project.GitURL,
+				fmt.Sprintf("%d/%d", len(project.Environments), project.DevelopmentEnvironmentsLimit),
 			})
 		}
 		table.Render()
