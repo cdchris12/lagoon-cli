@@ -21,15 +21,6 @@ var projectDeleteEnvCmd = &cobra.Command{
 		projectName := args[0]
 		projectEnvironment := args[1]
 
-		// get a new token if the current one is invalid
-		valid := graphql.VerifyTokenExpiry()
-		if valid == false {
-			loginErr := loginToken()
-			if loginErr != nil {
-				panic(loginErr)
-			}
-		}
-
 		fmt.Println(fmt.Sprintf("Deleting %s-%s", projectName, projectEnvironment))
 
 		if yesNo() {
