@@ -1,12 +1,10 @@
 GOCMD=go
-DEPCMD=dep
+GO11MODULE=on
 
 ARTIFACT_NAME=lagoon
 ARTIFACT_DESTINATION=$(GOPATH)/bin
 
-all: deps test build
-deps:
-	$(DEPCMD) ensure
+all: test build
 build:
 	$(GOCMD) build -o $(ARTIFACT_DESTINATION)/$(ARTIFACT_NAME) -v
 test:
