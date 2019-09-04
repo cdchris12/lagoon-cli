@@ -13,12 +13,14 @@ func HasValidToken() bool {
 }
 
 func getGraphQLToken() string {
-	return viper.GetString("lagoon_token")
+	lagoon := viper.GetString("current")
+	return viper.GetString("lagoons." + lagoon + ".token")
 }
 
 // GraphQLClient returns a new GraphQL client.
 func GraphQLClient() *graphql.Client {
-	return graphql.NewClient(viper.GetString("lagoon_graphql"))
+	lagoon := viper.GetString("current")
+	return graphql.NewClient(viper.GetString("lagoons." + lagoon + ".graphql"))
 }
 
 // GraphQLRequest performs a GraphQL request.

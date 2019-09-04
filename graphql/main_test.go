@@ -10,7 +10,7 @@ func TestValidateToken(t *testing.T) {
 	if got == true {
 		t.Error("No token is set by default", got)
 	}
-	viper.Set("lagoon_token", "testtoken")
+	viper.Set("lagoons.amazeeio.token", "testtoken")
 	got = HasValidToken()
 	if got == false {
 		t.Error("ValidateToken should not fail once a token is set", got)

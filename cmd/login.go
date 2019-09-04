@@ -45,7 +45,7 @@ func loginToken() error {
 	}
 	var err error
 
-	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", viper.GetString("lagoon_hostname"), viper.GetString("lagoon_port")), config)
+	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", viper.GetString("lagoons."+cmdLagoon+".hostname"), viper.GetString("lagoons."+cmdLagoon+".port")), config)
 	if err != nil {
 		//panic(err)
 		return err
@@ -63,7 +63,7 @@ func loginToken() error {
 		return err
 	}
 	err = conn.Close()
-	viper.Set("lagoon_token", strings.TrimSpace(string(out)))
+	viper.Set("lagoons."+cmdLagoon+".token", strings.TrimSpace(string(out)))
 	err = viper.WriteConfig()
 	if err != nil {
 		//panic(err)

@@ -13,13 +13,13 @@ var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Configure Lagoon CLI",
 	Run: func(cmd *cobra.Command, args []string) {
-		lagoonHostname := Prompt(fmt.Sprintf("Lagoon Hostname (%s)", viper.GetString("lagoon_hostname")))
-		lagoonPort := Prompt(fmt.Sprintf("Lagoon Port (%s)", viper.GetString("lagoon_port")))
-		lagoonGraphQL := Prompt(fmt.Sprintf("Lagoon GraphQL endpoint (%s)", viper.GetString("lagoon_graphql")))
+		lagoonHostname := Prompt(fmt.Sprintf("Lagoon Hostname (%s)", viper.GetString("lagoons."+cmdLagoon+".hostname")))
+		lagoonPort := Prompt(fmt.Sprintf("Lagoon Port (%s)", viper.GetString("lagoons."+cmdLagoon+".port")))
+		lagoonGraphQL := Prompt(fmt.Sprintf("Lagoon GraphQL endpoint (%s)", viper.GetString("lagoons."+cmdLagoon+".graphql")))
 
-		viper.Set("lagoon_hostname", lagoonHostname)
-		viper.Set("lagoon_port", lagoonPort)
-		viper.Set("lagoon_graphql", lagoonGraphQL)
+		viper.Set("lagoons."+cmdLagoon+".hostname", lagoonHostname)
+		viper.Set("lagoons."+cmdLagoon+".port", lagoonPort)
+		viper.Set("lagoons."+cmdLagoon+".graphql", lagoonGraphQL)
 
 		fmt.Println("Lagoon CLI is now configured, run `lagoon login` to generate your JWT access token.")
 	},

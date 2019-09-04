@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/cdchris12/lagoon-cli/app"
 
@@ -16,6 +17,7 @@ import (
 
 var cmdProject app.LagoonProject
 var cmdProjectName = ""
+var cmdLagoon = ""
 
 var rootCmd = &cobra.Command{
 	Use:   "lagoon",
@@ -37,7 +39,7 @@ func init() {
 	cobra.EnableCommandSorting = false
 
 	rootCmd.PersistentFlags().StringVarP(&cmdProjectName, "project", "p", "", "The project name to interact with")
-
+	rootCmd.PersistentFlags().StringVarP(&cmdLagoon, "lagoon", "l", "", "The lagoon instance to interact with")
 	rootCmd.SetUsageTemplate(`Usage:{{if .Runnable}}
   {{.UseLine}}{{end}}{{if .HasAvailableSubCommands}}
   {{.CommandPath}} [command]{{end}}{{if gt (len .Aliases) 0}}
@@ -90,20 +92,33 @@ func initConfig() {
 	// @todo see if we can grok the proper info from the cwd .lagoon.yml
 	viper.AddConfigPath(home)
 	viper.SetConfigName(configName)
-	viper.SetDefault("lagoon_hostname", "ssh.lagoon.amazeeio.cloud")
-	viper.SetDefault("lagoon_port", 32222)
-	viper.SetDefault("lagoon_token", "")
-	viper.SetDefault("lagoon_graphql", "https://api.lagoon.amazeeio.cloud/graphql")
-	viper.SetDefault("lagoon_ui", "https://ui-lagoon-master.ch.amazee.io")
-	viper.SetDefault("lagoon_kibana", "https://logs-db-ui-lagoon-master.ch.amazee.io/")
+	viper.SetDefault("lagoons.amazeeio.hostname", "ssh.lagoon.amazeeio.cloud")
+	viper.SetDefault("lagoons.amazeeio.port", 32222)
+	viper.SetDefault("lagoons.amazeeio.token", "")
+	viper.SetDefault("lagoons.amazeeio.graphql", "https://api.lagoon.amazeeio.cloud/graphql")
+	viper.SetDefault("lagoons.amazeeio.ui", "https://ui-lagoon-master.ch.amazee.io")
+	viper.SetDefault("lagoons.amazeeio.kibana", "https://logs-db-ui-lagoon-master.ch.amazee.io/")
+	viper.SetDefault("default", "amazeeio")
 	err = viper.ReadInConfig()
 	if err != nil {
 		err = viper.WriteConfigAs(filepath.Join(home, configName+".yml"))
 		if err != nil {
 			panic(err)
 		}
-
 	}
+	if cmdLagoon == "" {
+		if viper.GetString("default") == "" {
+			cmdLagoon = "amazeeio"
+		} else {
+			cmdLagoon = viper.GetString("default")
+		}
+	}
+	viper.Set("current", strings.TrimSpace(string(cmdLagoon)))
+	err = viper.WriteConfig()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Using Lagoon:", cmdLagoon, "\n")
 }
 
 func yesNo() bool {
