@@ -13,7 +13,7 @@ var webCmd = &cobra.Command{
 	Short: "Launch the web user interface",
 	Run: func(cmd *cobra.Command, args []string) {
 		urlBuilder := strings.Builder{}
-		urlBuilder.WriteString(viper.GetString("lagoons."+cmdLagoon+".ui"))
+		urlBuilder.WriteString(viper.GetString("lagoons." + cmdLagoon + ".ui"))
 		if cmdProjectName != "" {
 			urlBuilder.WriteString(fmt.Sprintf("/project?name=%s", cmdProjectName))
 		}

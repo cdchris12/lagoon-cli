@@ -118,7 +118,6 @@ func initConfig() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Using Lagoon:", cmdLagoon, "\n")
 }
 
 func yesNo() bool {

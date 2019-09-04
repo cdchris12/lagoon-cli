@@ -14,6 +14,7 @@ var projectCmd = &cobra.Command{
 	Use:   "project",
 	Short: "Show your projects, or details about a project",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Using Lagoon:", cmdLagoon, "\n")
 		// get a new token if the current one is invalid
 		valid := graphql.VerifyTokenExpiry()
 		if valid == false {
