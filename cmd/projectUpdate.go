@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	//"github.com/cdchris12/lagoon-cli/graphql"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ var projectUpdateCmd = &cobra.Command{
 		projectName := args[0]
 		projectProperty := args[1]
 		projectValue := args[2]
+
 		fmt.Println(fmt.Sprintf("Updating %s property %s with %s", projectName, projectProperty, projectValue))
 	},
 }

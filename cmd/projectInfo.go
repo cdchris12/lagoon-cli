@@ -29,6 +29,7 @@ var projectInfoCmd = &cobra.Command{
 			}
 			cmdProject.Name = args[0]
 		}
+
 		var responseData ProjectByName
 		err := graphql.GraphQLRequest(fmt.Sprintf(`query {
   projectByName(name: "%s") {
@@ -88,7 +89,7 @@ var projectInfoCmd = &cobra.Command{
 				environment.DeployType,
 				environment.EnvironmentType,
 				environment.Route,
-				fmt.Sprintf("ssh -p %s -t %s-%s@%s", viper.GetString("lagoon_port"), project.Name, environment.Name, viper.GetString("lagoon_hostname")),
+				fmt.Sprintf("ssh -p %s -t %s-%s@%s", viper.GetString("lagoons."+cmdLagoon+".port"), project.Name, environment.Name, viper.GetString("lagoons."+cmdLagoon+".hostname")),
 			})
 		}
 		table.Render()
