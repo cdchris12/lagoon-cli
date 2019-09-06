@@ -22,27 +22,55 @@ var loginCmd = &cobra.Command{
 	},
 }
 
-func publicKey(path string) ssh.AuthMethod {
+func publicKey(path string) (ssh.AuthMethod, func() error) {
+	noopCloseFunc := func() error { return nil }
+
 	key, err := ioutil.ReadFile(path)
 	if err != nil {
 		panic(err)
 	}
-	signer, err := ssh.ParsePrivateKey(key)
-	if err != nil {
-		panic(err)
+
+	// Connect to SSH agent to ask for unencrypted private keys
+	if sshAgentConn, err := net.Dial("unix", os.Getenv("SSH_AUTH_SOCK")); err == nil {
+		sshAgent := agent.NewClient(sshAgentConn)
+
+		keys, _ := sshAgent.List()
+		if len(keys) > 0 {
+			// There are key(s) in the agent
+			//defer sshAgentConn.Close()
+			return ssh.PublicKeysCallback(sshAgent.Signers), sshAgentConn.Close
+		}
 	}
-	return ssh.PublicKeys(signer)
+
+	// Try to look for an unencrypted private key
+	signer, err := ssh.ParsePrivateKey(key)
+	if err.Error() != "ssh: cannot decode encrypted private keys" {
+		panic(err)
+	} else if err == nil {
+	// return unencrypted private key
+	return ssh.PublicKeys(signer), noopCloseFunc
+	}
+
+	// Handle encrypted private keys
+	fmt.Println("Found an encrypted private key!")
+	fmt.Printf("Enter passphrase for '%s': ", path)
+	bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+	fmt.Println()
+	return ssh.PublicKeys(signer), noopCloseFunc
 }
 
 func loginToken() error {
 	homeDir, _ := os.UserHomeDir()
+	authMethod, closeSSHAgent := publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir))
 	config := &ssh.ClientConfig{
 		User: "lagoon",
 		Auth: []ssh.AuthMethod{
-			publicKey(fmt.Sprintf("%s/.ssh/id_rsa", homeDir)),
+			authMethod,
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
+	closeSSHAgent()
+
 	var err error
 
 	conn, err := ssh.Dial("tcp", fmt.Sprintf("%s:%s", viper.GetString("lagoons."+cmdLagoon+".hostname"), viper.GetString("lagoons."+cmdLagoon+".port")), config)
