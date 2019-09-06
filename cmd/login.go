@@ -5,9 +5,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/crypto/ssh/agent"
 	"io/ioutil"
 	"os"
 	"strings"
+	"net"
 )
 
 var loginCmd = &cobra.Command{
@@ -56,6 +59,7 @@ func publicKey(path string) (ssh.AuthMethod, func() error) {
 	fmt.Printf("Enter passphrase for '%s': ", path)
 	bytePassword, err := terminal.ReadPassword(int(os.Stdin.Fd()))
 	fmt.Println()
+	signer, err = ssh.ParsePrivateKeyWithPassphrase(key, bytePassword)
 	return ssh.PublicKeys(signer), noopCloseFunc
 }
 
@@ -69,7 +73,7 @@ func loginToken() error {
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
-	closeSSHAgent()
+	defer closeSSHAgent()
 
 	var err error
 
